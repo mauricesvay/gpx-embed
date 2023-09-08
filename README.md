@@ -1,0 +1,3 @@
+- `npm install`
+- `npm run dev` to develop locally
+- `npm run build` to build
