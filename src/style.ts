@@ -1,6 +1,6 @@
 import { StyleSpecification } from "maplibre-gl";
 
-const STYLES = ["jawgsunny", "jawgdark", "cyclosm"] as const;
+const STYLES = ["jawgsunny", "jawgdark", "jawgterrain", "cyclosm"] as const;
 type Style = (typeof STYLES)[number];
 
 export const isStyle = (value: unknown): value is Style =>
@@ -32,6 +32,9 @@ const getCyclOSMStyle = (): StyleSpecification => ({
 const getJawgSunnyStyle = (accessToken: string) =>
   `https://api.jawg.io/styles/jawg-sunny.json?access-token=${accessToken}`;
 
+const getJawgTerrainStyle = (accessToken: string) =>
+  `https://api.jawg.io/styles/jawg-terrain.json?access-token=${accessToken}`;
+
 const getJawgDarkStyle = (accessToken: string) =>
   `https://api.jawg.io/styles/jawg-dark.json?access-token=${accessToken}`;
 
@@ -39,6 +42,10 @@ export const getStyle = (style?: Style) => {
   switch (style) {
     case "jawgsunny":
       return getJawgSunnyStyle(
+        "tj4jikFbVaSWErkfn9ZzIndBB8vwaJQdZULMQ1uuyO9NGfDPvZj9rNPR5U0V0iQC"
+      );
+    case "jawgterrain":
+      return getJawgTerrainStyle(
         "tj4jikFbVaSWErkfn9ZzIndBB8vwaJQdZULMQ1uuyO9NGfDPvZj9rNPR5U0V0iQC"
       );
     case "jawgdark":
