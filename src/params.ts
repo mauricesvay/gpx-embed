@@ -2,7 +2,7 @@ import { isStyle } from "./style";
 import { getUrlParams } from "./url";
 
 const DEFAULTS = {
-  gpx: "",
+  gpx: undefined,
   style: "jawgsunny" as const,
   traceColor: "#CC3366" as const,
 };
@@ -16,16 +16,11 @@ const isValidColor = (value: unknown) =>
 export const getParams = () => {
   const urlParams = getUrlParams();
   const validParams = {
-    gpx: isValidGpxUrl(urlParams.gpx) ? urlParams.gpx : undefined,
-    style: isStyle(urlParams.style) ? urlParams.style : undefined,
+    gpx: isValidGpxUrl(urlParams.gpx) ? urlParams.gpx : DEFAULTS.gpx,
+    style: isStyle(urlParams.style) ? urlParams.style : DEFAULTS.style,
     traceColor: isValidColor(urlParams.traceColor)
       ? `#${urlParams.traceColor}`
-      : undefined,
+      : DEFAULTS.traceColor,
   };
-
-  const params = {
-    ...DEFAULTS,
-    ...validParams,
-  };
-  return params;
+  return validParams;
 };
