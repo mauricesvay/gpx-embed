@@ -1,10 +1,11 @@
 import MapLibreGL, { LngLatLike } from "maplibre-gl";
 import { getParams } from "./params";
-import { getBoundingBox, gpxToGeoJson } from "./parseGpx";
+import { getBoundingBox, gpxToGeoJson, parseGpx } from "./parseGpx";
 import { getStyle } from "./style";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./style.css";
+import { renderStats } from "./renderStats";
 
 async function init() {
   const params = getParams();
@@ -27,9 +28,27 @@ async function init() {
     }
 
     try {
+      // Fetch
       const response = await window.fetch(gpxUrl);
       const text = await response.text();
+
+      // Parse
       const geojson = gpxToGeoJson(text);
+
+      // Stats
+      const { totalDistance, positiveElevation } = parseGpx(text);
+      renderStats({ totalDistance, positiveElevation });
+
+      if (
+        !geojson.features.some(
+          (feature) =>
+            feature.geometry.type === "LineString" &&
+            Array.isArray(feature.geometry.coordinates) &&
+            feature.geometry.coordinates.length
+        )
+      ) {
+        throw new Error("No valid trace found");
+      }
 
       // Display trace
       const startEndGeoJson = {

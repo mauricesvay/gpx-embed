@@ -1,14 +1,28 @@
 import gpxParser from "gpxparser";
 import MapLibreGL, { LngLatBounds, LngLatLike } from "maplibre-gl";
 
-function parseKomootGpx(gpxString: string) {
+export function parseGpx(gpxString: string) {
   var gpx = new gpxParser();
   gpx.parse(gpxString);
-  const points = gpx.tracks?.[0]?.points ?? [];
-  return points.map(({ lat, lon }) => ({
-    lat,
-    lng: lon,
-  }));
+
+  if (gpx.tracks.length) {
+    const firstTrack = gpx.tracks[0];
+    const totalDistance = firstTrack?.distance.total;
+    const positiveElevation = firstTrack?.elevation.pos;
+    const points = firstTrack?.points ?? [];
+    const elevation = points.map(({ ele }) => ele);
+    const geoPoints = points.map(({ lat, lon }) => ({
+      lat,
+      lng: lon,
+    }));
+    return { totalDistance, positiveElevation, elevation, geoPoints };
+  }
+  return {
+    totalDistance: null,
+    positiveElevation: null,
+    elevation: [],
+    geoPoints: [],
+  };
 }
 
 export const getBoundingBox = (coordinates: LngLatLike[]) =>
@@ -17,7 +31,7 @@ export const getBoundingBox = (coordinates: LngLatLike[]) =>
   }, new MapLibreGL.LngLatBounds(coordinates[0], coordinates[0]));
 
 export const gpxToGeoJson = (gpxString: string) => {
-  const points = parseKomootGpx(gpxString);
+  const { geoPoints: points } = parseGpx(gpxString);
   const geojsonPoints = points.map(({ lng, lat }) => [lng, lat] as LngLatLike);
   const geojson = {
     type: "FeatureCollection",

@@ -7,6 +7,18 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
+  font-family: sans-serif;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  margin: 0;
+  padding: 0;
+}
+
+.flex {
+  display: flex;
 }
 
 #app {
@@ -17,4 +29,31 @@ body {
 #map {
   width: 100%;
   height: 100%;
+}
+
+#stats {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#stats .panel {
+  padding: 8px 12px;
+}
+
+#stats ul {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+}
+
+#stats ul {
+  color: #888;
+}
+
+#stats strong {
+  color: #111;
 }
