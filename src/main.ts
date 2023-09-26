@@ -16,6 +16,8 @@ async function init() {
   });
 
   map.on("load", async () => {
+    map.addControl(new MapLibreGL.NavigationControl());
+
     const gpxUrl = params.gpx;
     if (!gpxUrl) {
       console.error(
